@@ -16,10 +16,7 @@ from os import getenv
 from keyboards import *
 
 from create_bot import dp, bot
-from create_bot import ADMIN_ID, SERVER
-
-if not SERVER:
-    from create_bot import KURS_ALANYA, KURS_ANTALYA
+from create_bot import ADMIN_ID
 
 
 CHOOSE_DATE_MESSAGE = f'{chr(0x1F4C5)} Выберите дату'
@@ -186,13 +183,9 @@ async def handle_today(c_back: types.CallbackQuery, state: FSMContext):
 async def handle_other_day(c_back: types.CallbackQuery, state: FSMContext):
     name = c_back.from_user.first_name
 
-    if SERVER:
-        kurs_alanya = getenv('KURS_ALANYA')
-        kurs_antalya = getenv('KURS_ANTALYA')
+    kurs_alanya = getenv('KURS_ALANYA')
+    kurs_antalya = getenv('KURS_ANTALYA')
 
-    else:
-        kurs_alanya = KURS_ALANYA
-        kurs_antalya = KURS_ANTALYA
 
     answer = (f'На сегодня курс от {kurs_alanya} до {kurs_antalya},\n'
               f'в зависимости от города\n'
@@ -252,12 +245,8 @@ async def process_simple_calendar(callback_query: types.CallbackQuery, callback_
 async def handle_city(c_back: types.CallbackQuery, state: FSMContext):
     city = c_back.data
 
-    if SERVER:
-        kurs_alanya = float(getenv('KURS_ALANYA'))
-        kurs_antalya = float(getenv('KURS_ANTALYA'))
-    else:
-        kurs_alanya = float(KURS_ALANYA)
-        kurs_antalya = float(KURS_ANTALYA)
+    kurs_alanya = float(getenv('KURS_ALANYA'))
+    kurs_antalya = float(getenv('KURS_ANTALYA'))
 
     if city == ANTALYA_BUTTON:
         kurs = kurs_antalya
