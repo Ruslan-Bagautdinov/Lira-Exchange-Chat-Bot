@@ -3,4 +3,5 @@
 */__pycache__/
 /__pycache__/
 config.py
+vds_stuff.txt
 /handlers/test.py
