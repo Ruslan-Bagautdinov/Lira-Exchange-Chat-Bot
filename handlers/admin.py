@@ -8,7 +8,7 @@ from keyboards.admin_kb import *
 
 import os
 import shutil
-from os import getenv
+from os import environ
 
 from create_bot import dp, bot, ADMIN_ID
 
@@ -55,7 +55,7 @@ async def starting_edit(msg: types.Message, state: FSMContext):
             else:
                 config_var_name = 'KURS_ANTALYA'
 
-            kurs_now = f'Сейчас курс для города {msg.text} - {getenv(config_var_name)}\n'
+            kurs_now = f'Сейчас курс для города {msg.text} - {environ.get(config_var_name)}\n'
             await bot.send_message(msg.from_user.id,
                                    kurs_now)
 

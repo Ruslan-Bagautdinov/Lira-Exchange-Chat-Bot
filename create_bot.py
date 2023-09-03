@@ -1,12 +1,12 @@
 from aiogram import Bot
 from aiogram.dispatcher import Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from os import getenv
+from os import environ
 
-TOKEN = getenv('TOKEN')
-ADMIN_ID = getenv('ADMIN_ID')
-KURS_ALANYA = getenv('KURS_ALANYA')
-KURS_ANTALYA = getenv('KURS_ANTALYA')
+TOKEN = environ.get('TOKEN')
+ADMIN_ID = environ.get('ADMIN_ID')
+KURS_ALANYA = environ.get('KURS_ALANYA')
+KURS_ANTALYA = environ.get('KURS_ANTALYA')
 
 
 storage = MemoryStorage()

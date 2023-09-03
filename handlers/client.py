@@ -7,7 +7,7 @@ from aiogram.types import ReplyKeyboardRemove
 
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
-from os import getenv
+from os import environ
 
 # from icecream import ic
 
@@ -183,8 +183,8 @@ async def handle_today(c_back: types.CallbackQuery, state: FSMContext):
 async def handle_other_day(c_back: types.CallbackQuery, state: FSMContext):
     name = c_back.from_user.first_name
 
-    kurs_alanya = getenv('KURS_ALANYA')
-    kurs_antalya = getenv('KURS_ANTALYA')
+    kurs_alanya = environ.get('KURS_ALANYA')
+    kurs_antalya = environ.get('KURS_ANTALYA')
 
 
     answer = (f'На сегодня курс от {kurs_alanya} до {kurs_antalya},\n'
@@ -245,8 +245,8 @@ async def process_simple_calendar(callback_query: types.CallbackQuery, callback_
 async def handle_city(c_back: types.CallbackQuery, state: FSMContext):
     city = c_back.data
 
-    kurs_alanya = float(getenv('KURS_ALANYA'))
-    kurs_antalya = float(getenv('KURS_ANTALYA'))
+    kurs_alanya = float(environ.get('KURS_ALANYA'))
+    kurs_antalya = float(environ.get('KURS_ANTALYA'))
 
     if city == ANTALYA_BUTTON:
         kurs = kurs_antalya
