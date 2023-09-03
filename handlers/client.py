@@ -7,9 +7,6 @@ from aiogram.types import ReplyKeyboardRemove
 
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
-from os import environ
-
-# from icecream import ic
 
 # own imports
 
@@ -17,6 +14,7 @@ from keyboards import *
 
 from create_bot import dp, bot
 from create_bot import ADMIN_ID
+from database import rate_db
 
 
 CHOOSE_DATE_MESSAGE = f'{chr(0x1F4C5)} Выберите дату'
@@ -166,7 +164,6 @@ async def handle_today(c_back: types.CallbackQuery, state: FSMContext):
         order_day = today.strftime("%d.%m.%Y")
         async with state.proxy() as order:
             order["Дата"] = order_day
-            # order["Day"] = today.day
 
     await FSMClient.get_date.set()
 
@@ -183,8 +180,8 @@ async def handle_today(c_back: types.CallbackQuery, state: FSMContext):
 async def handle_other_day(c_back: types.CallbackQuery, state: FSMContext):
     name = c_back.from_user.first_name
 
-    kurs_alanya = environ.get('KURS_ALANYA')
-    kurs_antalya = environ.get('KURS_ANTALYA')
+    kurs_alanya = rate_db.read_rate('ALANYA')
+    kurs_antalya = rate_db.read_rate('ANTALYA')
 
 
     answer = (f'На сегодня курс от {kurs_alanya} до {kurs_antalya},\n'
@@ -245,8 +242,8 @@ async def process_simple_calendar(callback_query: types.CallbackQuery, callback_
 async def handle_city(c_back: types.CallbackQuery, state: FSMContext):
     city = c_back.data
 
-    kurs_alanya = float(environ.get('KURS_ALANYA'))
-    kurs_antalya = float(environ.get('KURS_ANTALYA'))
+    kurs_alanya = rate_db.read_rate('ALANYA')
+    kurs_antalya = rate_db.read_rate('ANTALYA')
 
     if city == ANTALYA_BUTTON:
         kurs = kurs_antalya

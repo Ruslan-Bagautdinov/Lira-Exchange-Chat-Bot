@@ -1,13 +1,17 @@
 from aiogram import Bot
 from aiogram.dispatcher import Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from os import environ
+from os import getenv, environ
 
-TOKEN = environ.get('TOKEN')
-ADMIN_ID = environ.get('ADMIN_ID')
-KURS_ALANYA = environ.get('KURS_ALANYA')
-KURS_ANTALYA = environ.get('KURS_ANTALYA')
+SERVER = environ.get('SERVER', False)
 
+if SERVER:
+    TOKEN = environ.get('TOKEN')
+    ADMIN_ID = environ.get('ADMIN_ID')
+else:
+    from config import *
+    TOKEN = TOKEN
+    ADMIN_ID = ADMIN_ID
 
 storage = MemoryStorage()
 bot = Bot(

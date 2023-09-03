@@ -6,11 +6,9 @@ from aiogram.types import ReplyKeyboardRemove
 
 from keyboards.admin_kb import *
 
-import os
-import shutil
-from os import environ
 
 from create_bot import dp, bot, ADMIN_ID
+from database import rate_db
 
 
 ADMIN_USER_ID = int(ADMIN_ID)
@@ -51,11 +49,11 @@ async def starting_edit(msg: types.Message, state: FSMContext):
             async with state.proxy() as kurs_data:
                 kurs_data["Город"] = msg.text
             if msg.text == 'Алания':
-                config_var_name = 'KURS_ALANYA'
+                config_var_name = 'ALANYA'
             else:
-                config_var_name = 'KURS_ANTALYA'
+                config_var_name = 'ANTALYA'
 
-            kurs_now = f'Сейчас курс для города {msg.text} - {environ.get(config_var_name)}\n'
+            kurs_now = f'Сейчас курс для города {msg.text} - {rate_db.read_rate(config_var_name)}\n'
             await bot.send_message(msg.from_user.id,
                                    kurs_now)
 
@@ -73,15 +71,14 @@ async def entering_value(msg: types.Message, state: FSMContext):
 
         async with state.proxy() as kurs_data:
 
-            answer = change_the_kurs(kurs_data["Город"], value)
-
-            if answer:
+            try:
+                rate_db.change_rate(kurs_data["Город"], value)
                 await bot.send_message(msg.from_user.id,
                                        f'Для города {kurs_data["Город"]} установлен новый курс',
                                        reply_markup=admin_keyboard
                                        )
                 await FSMAdmin.start_edit.set()
-            else:
+            except:
                 await bot.send_message(msg.from_user.id,
                                        'Неизвестная ошибка',
                                        reply_markup=admin_keyboard
@@ -94,28 +91,6 @@ async def entering_value(msg: types.Message, state: FSMContext):
                                reply_markup=admin_keyboard
                                )
         await FSMAdmin.start_edit.set()
-
-
-def change_the_kurs(city, value, answer=False):
-
-    path = os.path.join('/etc', 'environment')
-    if city == 'Алания':
-        config_var_name = 'KURS_ALANYA'
-    else:
-        config_var_name = 'KURS_ANTALYA'
-
-    with open(path, 'r') as file:
-        lines = file.readlines()
-
-    shutil.copyfile(path, path + '.bak')
-
-    with open(path, 'w') as file:
-        for line in lines:
-            if line.startswith(config_var_name + '='):
-                line = line.replace(line, f'{config_var_name}={value}\n')
-                answer = True
-            file.write(line)
-    return answer
 
 
 def register_handlers_admin(dp: Dispatcher):
