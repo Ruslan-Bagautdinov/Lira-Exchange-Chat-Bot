@@ -12,7 +12,6 @@ from database import rate_db
 
 
 ADMIN_USER_ID = int(ADMIN_ID)
-# ID = None
 
 
 class FSMAdmin(StatesGroup):

@@ -157,7 +157,6 @@ async def handle_today(c_back: types.CallbackQuery, state: FSMContext):
         order_day = tomorrow.strftime("%d.%m.%Y")
         async with state.proxy() as order:
             order["Дата"] = order_day
-            # order["Day"] = tomorrow.day
 
     else:
         today = datetime.now()
